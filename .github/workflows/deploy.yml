@@ -2,7 +2,7 @@ name: Deploy Pulumi
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 permissions:
   id-token: write
@@ -13,18 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::287526490745:role/PulumiGithubOIDCRole
-          aws-region: ca-central-1
+    - name: Configure AWS Credentials (OIDC)
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::287526490745:role/PulumiGithubOIDCRole
+        aws-region: ca-central-1
 
-      - name: Pulumi Deploy
-        uses: pulumi/actions@v4
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-        with:
-          command: up
-          stack-name: pulumi-lab7/dev
+    - name: Configure Pulumi ESC
+      run: |
+        echo "PULUMI_CONFIG=$(pulumi env open geethnandini47/pulumi-lab7/aws-oidc-env --show-secrets --json)" >> $GITHUB_ENV
+
+    - name: Pulumi Deploy
+      uses: pulumi/actions@v4
+      with:
+        command: up
+        stack-name: static-website-aws-typescript/dev
