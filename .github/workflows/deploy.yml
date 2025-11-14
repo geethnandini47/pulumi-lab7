@@ -31,4 +31,5 @@ jobs:
         PULUMI_ACCESS_TOKEN: ""
       with:
         command: up
-        stack-name: dev
+        stack-name: pulumi-lab7/dev
+
