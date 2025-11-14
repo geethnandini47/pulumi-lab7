@@ -26,3 +26,5 @@ jobs:
       with:
         command: up
         stack-name: dev
+        login-mode: "env"
+        env-file: "pulumi-lab7/aws-oidc-env"
