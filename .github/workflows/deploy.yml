@@ -14,16 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # NodeJS
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install NPM dependencies
+      - name: Install dependencies
         run: npm install
 
-      # Configure AWS credentials using STS TOKEN (no aws configure needed)
       - name: Configure AWS Credentials (STS)
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -32,13 +30,11 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ca-central-1
 
-      # Pulumi Login
       - name: Pulumi Login
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: pulumi login
 
-      # Pulumi Deploy
       - name: Pulumi Deploy
         uses: pulumi/actions@v4
         env:
