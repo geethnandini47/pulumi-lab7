@@ -21,10 +21,9 @@ jobs:
         role-to-assume: arn:aws:iam::287526490745:role/PulumiGithubOIDCRole
         aws-region: ca-central-1
 
-    - name: Pulumi Deploy
-      uses: pulumi/actions@v4
+    - name: Pulumi Deploy (ESC)
+      uses: pulumi/actions@v5
       with:
         command: up
         stack-name: dev
-        login-mode: "env"
-        env-file: "pulumi-lab7/aws-oidc-env"
+        cloud-url: "pulumi://geethnandini47/pulumi-lab7/aws-oidc-env"
