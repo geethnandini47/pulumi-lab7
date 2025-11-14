@@ -12,26 +12,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
       - uses: actions/checkout@v3
 
-      # Install NodeJS
+      # NodeJS
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Install dependencies
       - name: Install NPM dependencies
         run: npm install
 
-      # Configure AWS credentials using STS Tokens
+      # Configure AWS credentials using STS TOKEN (no aws configure needed)
       - name: Configure AWS Credentials (STS)
-        run: |
-          aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
-          aws.configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          aws configure set aws_session_token "${{ secrets.AWS_SESSION_TOKEN }}"
-          aws configure set region "ca-central-1"
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ca-central-1
 
       # Pulumi Login
       - name: Pulumi Login
