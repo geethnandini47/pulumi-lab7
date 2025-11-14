@@ -12,37 +12,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      # Checkout code
+      - uses: actions/checkout@v3
 
-    # Install NodeJS
-    - name: Setup NodeJS
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
+      # Install NodeJS
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    # Install dependencies
-    - name: Install NPM dependencies
-      run: npm install
+      # Install dependencies
+      - name: Install NPM dependencies
+        run: npm install
 
-    # AWS Access Keys
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ca-central-1
+      # Configure AWS credentials using STS Tokens
+      - name: Configure AWS Credentials (STS)
+        run: |
+          aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          aws.configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          aws configure set aws_session_token "${{ secrets.AWS_SESSION_TOKEN }}"
+          aws configure set region "ca-central-1"
 
-    # Pulumi login (needs token!)
-    - name: Pulumi Login
-      env:
-        PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      run: pulumi login
+      # Pulumi Login
+      - name: Pulumi Login
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: pulumi login
 
-    # Pulumi Deploy
-    - name: Pulumi Deploy
-      uses: pulumi/actions@v4
-      env:
-        PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-      with:
-        command: up
-        stack-name: geethnandini47/static-website-aws-typescript/dev
+      # Pulumi Deploy
+      - name: Pulumi Deploy
+        uses: pulumi/actions@v4
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        with:
+          command: up
+          stack-name: geethnandini47/static-website-aws-typescript/dev
