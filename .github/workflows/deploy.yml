@@ -31,4 +31,5 @@ jobs:
         PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       with:
         command: up
-        stack-name: static-website-aws-typescript/dev
+        stack-name: geethnandini47/static-website-aws-typescript/dev
+
