@@ -1,4 +1,5 @@
 name: pulumi-lab7
 runtime: nodejs
+
 backend:
-  url: pulumi://geethnandini47-org/pulumi-lab7
+  url: https://api.pulumi.com
