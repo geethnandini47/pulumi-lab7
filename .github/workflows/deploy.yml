@@ -32,4 +32,3 @@ jobs:
       with:
         command: up
         stack-name: geethnandini47/static-website-aws-typescript/dev
-
