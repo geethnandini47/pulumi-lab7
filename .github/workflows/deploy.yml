@@ -15,16 +15,29 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    # Install NodeJS (required for TypeScript Pulumi project)
+    - name: Setup NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    # Install Pulumi project dependencies
+    - name: Install NPM dependencies
+      run: npm install
+
+    # Configure AWS OIDC Role
     - name: Configure AWS Credentials (OIDC)
       uses: aws-actions/configure-aws-credentials@v2
       with:
         role-to-assume: arn:aws:iam::287526490745:role/PulumiGithubOIDCRole
         aws-region: ca-central-1
 
+    # Load ESC Environment
     - name: Configure Pulumi ESC
       run: |
         echo "PULUMI_CONFIG=$(pulumi env open geethnandini47/pulumi-lab7/aws-oidc-env --show-secrets --json)" >> $GITHUB_ENV
 
+    # RUN PULUMI DEPLOY
     - name: Pulumi Deploy
       uses: pulumi/actions@v4
       env:
