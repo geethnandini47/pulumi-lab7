@@ -14,17 +14,17 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    # Install NodeJS (required for TypeScript Pulumi project)
+    # Install NodeJS
     - name: Setup NodeJS
       uses: actions/setup-node@v3
       with:
         node-version: '16'
 
-    # Install Pulumi project dependencies
+    # Install dependencies
     - name: Install NPM dependencies
       run: npm install
 
-    # Configure AWS using Access Key + Secret Key
+    # AWS Access Keys
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -32,11 +32,13 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ca-central-1
 
-    # Login to Pulumi Cloud
+    # Pulumi login (needs token!)
     - name: Pulumi Login
+      env:
+        PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       run: pulumi login
 
-    # RUN PULUMI DEPLOY
+    # Pulumi Deploy
     - name: Pulumi Deploy
       uses: pulumi/actions@v4
       env:
