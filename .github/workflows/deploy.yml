@@ -5,7 +5,6 @@ on:
     branches: [ "main" ]
 
 permissions:
-  id-token: write
   contents: read
 
 jobs:
@@ -25,17 +24,17 @@ jobs:
     - name: Install NPM dependencies
       run: npm install
 
-    # Configure AWS OIDC Role
-    - name: Configure AWS Credentials (OIDC)
+    # Configure AWS using Access Key + Secret Key
+    - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        role-to-assume: arn:aws:iam::287526490745:role/PulumiGithubOIDCRole
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ca-central-1
 
-    # Load ESC Environment
-    - name: Configure Pulumi ESC
-      run: |
-        echo "PULUMI_CONFIG=$(pulumi env open geethnandini47/pulumi-lab7/aws-oidc-env --show-secrets --json)" >> $GITHUB_ENV
+    # Login to Pulumi Cloud
+    - name: Pulumi Login
+      run: pulumi login
 
     # RUN PULUMI DEPLOY
     - name: Pulumi Deploy
