@@ -1,10 +1,5 @@
 name: pulumi-lab7
-description: Static website using Pulumi
-runtime:
-  name: nodejs
-  options:
-    packagemanager: npm
-config:
-  pulumi:tags:
-    value:
-      pulumi:template: aws-typescript
+runtime: nodejs
+
+backend:
+  url: https://api.pulumi.com/esc
