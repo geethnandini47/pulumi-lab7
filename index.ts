@@ -17,12 +17,13 @@ new aws.s3.BucketObject("index", {
 // Create CloudFront distribution
 const cdn = new aws.cloudfront.Distribution("cdnDistribution", {
     enabled: true,
+
     origins: [
         {
             originId: "s3-origin",
-            domainName: bucket.bucketRegionalDomainName,   // ✅ FIXED
+            domainName: bucket.bucketRegionalDomainName,
             s3OriginConfig: {
-                originAccessIdentity: "",                 // Required field
+                originAccessIdentity: "",
             },
         },
     ],
@@ -34,16 +35,24 @@ const cdn = new aws.cloudfront.Distribution("cdnDistribution", {
         viewerProtocolPolicy: "redirect-to-https",
         allowedMethods: ["GET", "HEAD"],
         cachedMethods: ["GET", "HEAD"],
+
+        // ⭐ REQUIRED by AWS to avoid ForwardedValues error
+        forwardedValues: {
+            queryString: false,
+            cookies: {
+                forward: "none",
+            },
+        },
     },
 
     restrictions: {
         geoRestriction: {
-            restrictionType: "none",                     // REQUIRED
+            restrictionType: "none",
         },
     },
 
     viewerCertificate: {
-        cloudfrontDefaultCertificate: true,             // REQUIRED
+        cloudfrontDefaultCertificate: true,
     },
 });
 
