@@ -1,5 +1,4 @@
-name: pulumi-lab7
+name: static-website-aws-typescript
 runtime: nodejs
-
 backend:
   url: https://api.pulumi.com
