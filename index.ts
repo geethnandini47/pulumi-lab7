@@ -16,20 +16,34 @@ new aws.s3.BucketObject("index", {
 
 // Create CloudFront distribution
 const cdn = new aws.cloudfront.Distribution("cdnDistribution", {
-    origins: [{
-        originId: "s3-origin",
-        domainName: bucket.websiteEndpoint,
-    }],
     enabled: true,
+    origins: [
+        {
+            originId: "s3-origin",
+            domainName: bucket.bucketRegionalDomainName,   // ✅ FIXED
+            s3OriginConfig: {
+                originAccessIdentity: "",                 // Required field
+            },
+        },
+    ],
+
     defaultRootObject: "index.html",
+
     defaultCacheBehavior: {
+        targetOriginId: "s3-origin",
+        viewerProtocolPolicy: "redirect-to-https",
         allowedMethods: ["GET", "HEAD"],
         cachedMethods: ["GET", "HEAD"],
-        viewerProtocolPolicy: "redirect-to-https",
-        targetOriginId: "s3-origin",
     },
+
+    restrictions: {
+        geoRestriction: {
+            restrictionType: "none",                     // REQUIRED
+        },
+    },
+
     viewerCertificate: {
-        cloudfrontDefaultCertificate: true,
+        cloudfrontDefaultCertificate: true,             // REQUIRED
     },
 });
 
